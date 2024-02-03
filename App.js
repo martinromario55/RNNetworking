@@ -7,11 +7,15 @@ import {
   SafeAreaView,
   StatusBar,
   FlatList,
+  ActivityIndicator,
 } from 'react-native'
 
 export default function App() {
   // Fetch data from jsonplaceholder function
   const [posts, setPosts] = useState([])
+
+  // isLoading
+  const [isLoading, setIsLoading] = useState(true)
 
   const fetchData = async (limit = 10) => {
     const response = await fetch(
@@ -20,11 +24,22 @@ export default function App() {
     const data = await response.json()
     // console.log(data)
     setPosts(data)
+    setIsLoading(false)
   }
 
   useEffect(() => {
     fetchData()
   }, [])
+
+  // Activity Indicator
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    )
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -82,5 +97,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     marginTop: 12,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    paddingTop: StatusBar.currentHeight,
   },
 })
