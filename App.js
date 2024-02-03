@@ -13,9 +13,10 @@ import {
 export default function App() {
   // Fetch data from jsonplaceholder function
   const [posts, setPosts] = useState([])
-
   // isLoading
   const [isLoading, setIsLoading] = useState(true)
+  // Refreshing
+  const [refreshing, setRefreshing] = useState(false)
 
   const fetchData = async (limit = 10) => {
     const response = await fetch(
@@ -25,6 +26,13 @@ export default function App() {
     // console.log(data)
     setPosts(data)
     setIsLoading(false)
+  }
+
+  // handle Refresh
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    await fetchData(20)
+    setRefreshing(false)
   }
 
   useEffect(() => {
@@ -59,6 +67,8 @@ export default function App() {
           ListFooterComponent={
             <Text style={styles.footerText}>End of List</Text>
           }
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
         />
       </View>
     </SafeAreaView>
